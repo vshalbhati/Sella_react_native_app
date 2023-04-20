@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
   },
   cardsContainer: {
-    marginTop: SIZES.medium,
-    gap: SIZES.small,
+    marginTop: SIZES.xxLarge,
+    gap: SIZES.xxLarge,
     scrollbar: {
       display: 'none'
     },

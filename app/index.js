@@ -11,18 +11,18 @@ const router = useRouter();
     return (
         <SafeAreaView style={{flex:1, backgroundColor:COLORS.lightWhite}}>
             <Stack.Screen
-            options={{
-                headerStyle:{backgroundColor: COLORS.lightWhite},
-                headerShadowVisible:false,
-                headerLeft:()=>(
-                    <ScreenHeaderBtn iconUrl={icons.profile} dimension="60%"/>
-                ),
-                headerLeft:()=>(
-                    <ScreenHeaderBtn iconUrl={icons.profile} dimension="100%"/>
-                ),
-                headerTitle:""
-            }}
-            />
+        options={{
+          headerStyle: { backgroundColor: COLORS.lightWhite },
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <ScreenHeaderBtn iconUrl={icons.menu} dimension='60%' />
+          ),
+          headerRight: () => (
+            <ScreenHeaderBtn iconUrl={images.profile} dimension='100%' />
+          ),
+          headerTitle: "",
+        }}
+      />
             <ScrollView showsHorizontalScrollIndicator={false}>
                 <View
                     style={{

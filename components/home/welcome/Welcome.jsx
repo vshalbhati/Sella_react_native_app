@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, ActivityIndicatorBase, TextInput, Button, Image } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, ActivityIndicatorBase, TextInput, Button, Image, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 
 import styles from './welcome.style'
@@ -31,6 +31,26 @@ const Welcome = () => {
       console.log(error);
     }
   };
+
+  const stylis = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      paddingVertical: 16,
+      paddingHorizontal: 8,
+      alignItems: 'center',
+      backgroundColor: '#F8F8F8',
+    },
+    image: {
+      width: 50,
+      height: 50,
+      borderRadius: 4,
+      marginRight: 8,
+    },
+    title: {
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+  });
 
   return (
     <View>
@@ -72,22 +92,26 @@ const Welcome = () => {
         )}
         keyExtractor={item => item}
         contentContainerStyle={{columnGap:SIZES.small}}
+        showsHorizontalScrollIndicator={false}
         horizontal
         />
-              <FlatList
-        data={songs}
-        renderItem={({ item }) => (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <FlatList
+      data={songs}
+      renderItem={({ item }) => (
+        <View style={stylis.container}>
+          {item.track.images && item.track.images.coverart && (
             <Image
               source={{ uri: item.track.images.coverart }}
-              style={{ width: 50, height: 50 }}
+              style={stylis.image}
             />
-            <Text>{item.track.title}</Text>
-          </View>
-        )}
-        keyExtractor={item => item.track.key}
-        horizontal
-      />
+          )}
+          <Text style={stylis.title}>{item.track.title}</Text>
+        </View>
+      )}
+      keyExtractor={item => item.track.key}
+      showsHorizontalScrollIndicator={false}
+      horizontal
+    />
       </View>
     </View>
   )

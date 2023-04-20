@@ -6,7 +6,7 @@ import styles from './nearbyjobs.style'
 import { COLORS, SIZES} from '../../../constants';
 import NearbyJobCard from '../../common/cards/nearby/NearbyJobCard';
 
-const Nearbyjobs = () => {
+const Nearbyjobs = ({ navigation }) => {
   const router = useRouter();
   const isLoading=false;
   const error = false;
@@ -42,43 +42,33 @@ const Nearbyjobs = () => {
           </TouchableOpacity>
       </View>
 
-      {/* <View style={styles.cardsContainer}>
-        {isLoading ? (
-          <ActivityIndicator size="large" colors={COLORS.primary}/>
-        ) : error ?(
-          <Text>Something went wrong</Text>
-        ) : (
-          <FlatList
-          data={[1,2,3,4]}
-          renderItem={({item})=>(
-            <NearbyJobCard
-            item={item}
-            />
-          )}
-          keyExtractor={item => item?.job_id}
-          contentContainerStyle={{columnGap:SIZES.medium}}
-          horizontal
-          />
-        )}
-      </View> */}
-
 <View style={styles.cardsContainer}>
-      <FlatList
+<FlatList
         data={chartTracks}
         renderItem={({ item }) => (
-          <View style={stylis.item}>
+          <TouchableOpacity
+           style={stylis.item}
+           onPress={() => console.log(item.keyExtractor)}
+          >
             {item.images && item.images.coverart && (
               <Image
                 source={{ uri: item.images.coverart }}
                 style={stylis.image}
               />
             )}
-            <Text style={stylis.title}>{item.title}</Text>
-          </View>
+            <View style={stylis.textContainer}>
+              <Text style={stylis.trackTitle}>{item.title}</Text>
+              <Text style={stylis.artistName}>{item.subtitle}</Text>
+            </View>
+            <View style={stylis.playButton}>
+              <Image source={require("../../../assets/images/play.png")} style={stylis.playIcon} />
+            </View>
+          </TouchableOpacity>
         )}
         keyExtractor={item => item.key}
         contentContainerStyle={stylis.list}
-        horizontal
+        showsHorizontalScrollIndicator={false}
+        vertical
       />
     </View>
     </View>
@@ -88,11 +78,16 @@ const Nearbyjobs = () => {
 const stylis = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#F5FCFF',
-    scrollbar: {
-      display: 'none'
-    }
+    paddingHorizontal: 16,
+    paddingTop: 40,
+    overflow: 'hidden',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#222222',
   },
   list: {
     columnGap: 16,
@@ -103,24 +98,39 @@ const stylis = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     backgroundColor: '#FFFFFF',
-    shadowColor: '#000000',
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 1,
-      width: 1,
-    },
-    elevation: 2,
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
     marginRight: 16,
+    borderRadius: 8,
   },
-  title: {
-    fontSize: 16,
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  trackTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#333333',
+    marginBottom: 4,
+    color: '#222222',
+  },
+  artistName: {
+    fontSize: 16,
+    color: '#777777',
+  },
+  playButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#222222',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 16,
+  },
+  playIcon: {
+    width: 24,
+    height: 24,
   },
 });
 
