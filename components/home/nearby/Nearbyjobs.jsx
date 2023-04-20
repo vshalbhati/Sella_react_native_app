@@ -6,7 +6,7 @@ import styles from './nearbyjobs.style'
 import { COLORS, SIZES} from '../../../constants';
 import NearbyJobCard from '../../common/cards/nearby/NearbyJobCard';
 
-const Nearbyjobs = ({ navigation }) => {
+const Nearbyjobs = () => {
   const router = useRouter();
   const isLoading=false;
   const error = false;
@@ -48,7 +48,7 @@ const Nearbyjobs = ({ navigation }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
            style={stylis.item}
-           onPress={() => console.log(item.keyExtractor)}
+           onPress={() => router.push(`/job-details/${item.key}`)}
           >
             {item.images && item.images.coverart && (
               <Image
