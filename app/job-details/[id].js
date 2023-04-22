@@ -9,10 +9,14 @@ import useFetch from '../../hook/useFetch';
 const SellerDetails = () => {
     const params= useSearchParams();
     const router = useRouter();
-    const { data, isLoading, error, refetch} = useFetch('job-details', {key: params.key});
+    const [index, setIndex] = useState(params.id);
+    const { data, isLoading, error, refetch} = useFetch(`job-details/${index}`, {});
     const [refreshing, setRefreshing] = useState(false);
-    const onRefresh= () =>{}
-
+    const onRefresh = useCallback(() => {
+      setRefreshing(true);
+      refetch()
+      setRefreshing(false)
+    }, []);
   return (
     <SafeAreaView style={{flex:1, backgroundColor: COLORS.lightWhite}}>
         <Stack.Screen
@@ -48,14 +52,14 @@ const SellerDetails = () => {
                 <Text>Are bhaiya koi data nahi mila!</Text>
             ) :(
                 <View style={{padding: SIZES.medium, paddingBottom:100, flex: 1, justifyContent: 'center', alignItems: 'center',}}>
-                {data[0].images && data[0].images.coverart && (
+                {data[index].images && data[index].images.coverart && (
               <Image
-                source={{ uri: data[0].images.coverart }}
+                source={{ uri: data[index].images.coverart }}
                 style={stylis.image}
               />
             )}
-                <Text style={stylis.trackTitle}>{data[0].title}</Text>
-                <Text style={stylis.artistName}>{data[0].subtitle}</Text>
+                <Text style={stylis.trackTitle}>{data[index].title}</Text>
+                <Text style={stylis.artistName}>{data[index].subtitle}</Text>
                 </View>
             )}
             </ScrollView>

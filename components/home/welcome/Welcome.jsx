@@ -22,11 +22,11 @@ const Welcome = () => {
       const response = await fetch(`https://shazam.p.rapidapi.com/search?term=${query}`, {
         headers: {
           'x-rapidapi-host': 'shazam.p.rapidapi.com',
-          'x-rapidapi-key': '214e8ae2c7msh30ed631ddab79dcp1bf6a4jsn61fe676cb1cc'
+          // 'x-rapidapi-key': '214e8ae2c7msh30ed631ddab79dcp1bf6a4jsn61fe676cb1cc'
         }
       });
       const data = await response.json();
-      setSongs(data.tracks.hits);
+      setSongs(data.tracks);
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +55,7 @@ const Welcome = () => {
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.userName}>Hello BRO!</Text>
+        <Text style={styles.userName}>Hey BRO!</Text>
         <Text style={styles.welcomeMessage}>Find your seller</Text>
       </View>
 

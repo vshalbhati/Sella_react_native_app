@@ -19,7 +19,7 @@ const Nearbyjobs = () => {
         const response = await fetch('https://shazam.p.rapidapi.com/charts/track', {
           headers: {
             'x-rapidapi-host': 'shazam.p.rapidapi.com',
-            'x-rapidapi-key': '214e8ae2c7msh30ed631ddab79dcp1bf6a4jsn61fe676cb1cc'
+            // 'x-rapidapi-key': '4c281832ccmsh01bafa44beb87fap18e2c5jsn1b8f0b733086'
           }
         });
         const data = await response.json();
@@ -31,6 +31,10 @@ const Nearbyjobs = () => {
     fetchChartTracks();
   }, []);
 
+  // const handlePress=()=>{
+  //     let num = chartTracks.indexOf(item)
+  //     router.push(`/job-details/${num}`)
+  // }
 
   return (
     <View>
@@ -48,7 +52,8 @@ const Nearbyjobs = () => {
         renderItem={({ item }) => (
           <TouchableOpacity
            style={stylis.item}
-           onPress={() => router.push(`/job-details/${item.key}`)}
+          //  onPress={handlePress()}
+           onPress={() => router.push(`/job-details/${chartTracks.indexOf(item)}`)}
           >
             {item.images && item.images.coverart && (
               <Image
@@ -65,10 +70,9 @@ const Nearbyjobs = () => {
             </View>
           </TouchableOpacity>
         )}
-        keyExtractor={item => item.key}
+        keyExtractor={(item) => item.id}
         contentContainerStyle={stylis.list}
         showsHorizontalScrollIndicator={false}
-        vertical
       />
     </View>
     </View>
