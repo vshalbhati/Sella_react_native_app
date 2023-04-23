@@ -3,6 +3,9 @@ import {Stack, useRouter, useSearchParams} from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {COLORS, icons, images, SIZES} from '../../constants';
 import '../../assets/images/kemal.jpeg'
+import ScreenHeaderBtn from '../common/header/ScreenHeaderBtn';
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -53,20 +56,42 @@ const styles = StyleSheet.create({
   },
 });
 
-const Account = () => {
+
+const Account = ({navigation}) => {
     const router = useRouter();
   return (
     <SafeAreaView style={styles.container}>
+          <Stack.Screen
+        options={{
+            headerStyle:{backgroundColor: COLORS.lightWhite},
+            headerShadowVisible:false,
+            headerBackVisible:false,
+            headerLeft:()=>(
+                <ScreenHeaderBtn
+                iconUrl={icons.left}
+                dimension="60%"
+                handlePress={() => router.back()}
+                />
+            ),
+            headerRight:()=>(
+                <ScreenHeaderBtn
+                iconUrl={icons.share}
+                dimension="60%"
+                />
+            ),
+            headerTitle:''
+        }}
+        />
       <Image
         source={require('../../assets/images/kemal.jpeg')}
         style={styles.image}
-      />
+      /> 
       <Text style={styles.text}>Anya Forger</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate('signin')}>
         <Text style={styles.buttonText}>Log Out</Text>
       </TouchableOpacity>
       <View style={styles.continer}>
-      <TouchableOpacity style={styles.item}>
+      <TouchableOpacity style={styles.item} >
         <Text style={styles.itemText}>My Orders</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.item}>
@@ -83,5 +108,7 @@ const Account = () => {
     </SafeAreaView>
   )
 }
+
+
 
 export default Account

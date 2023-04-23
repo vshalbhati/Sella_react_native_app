@@ -6,7 +6,7 @@ import styles from './nearbyjobs.style'
 import { COLORS, SIZES} from '../../../constants';
 import NearbyJobCard from '../../common/cards/nearby/NearbyJobCard';
 
-const Nearbyjobs = () => {
+  const Nearbyjobs = ({navigation}) => {
   const router = useRouter();
   const isLoading=false;
   const error = false;
@@ -31,18 +31,13 @@ const Nearbyjobs = () => {
     fetchChartTracks();
   }, []);
 
-  // const handlePress=()=>{
-  //     let num = chartTracks.indexOf(item)
-  //     router.push(`/job-details/${num}`)
-  // }
-
   return (
     <View>
 
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Popular Sellers</Text>
           <TouchableOpacity>
-            <Text style={styles.headerBtn}>Show all</Text>
+            <Text style={styles.headerBtn} >Show all</Text>
           </TouchableOpacity>
       </View>
 
@@ -52,7 +47,6 @@ const Nearbyjobs = () => {
         renderItem={({ item }) => (
           <TouchableOpacity
            style={stylis.item}
-          //  onPress={handlePress()}
            onPress={() => router.push(`/job-details/${chartTracks.indexOf(item)}`)}
           >
             {item.images && item.images.coverart && (
