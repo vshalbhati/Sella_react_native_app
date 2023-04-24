@@ -7,9 +7,47 @@ import {Stack, useRouter, useSearchParams} from 'expo-router';
 const Signin = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignIn = () => {
-    // Handle sign in logic here
+  const handleSignIn = async() => {
+    if (!email.includes('@')) {
+      setEmailError(true);
+      return;
+    } else {
+      setEmailError(false);
+    }
+
+    if (password.trim() === '') {
+      setPasswordError(true);
+      return;
+    } else {
+      setPasswordError(false);
+    }
+
+    // Call the signup API
+    setIsLoading(true);
+    try {
+      const response = await fetch('signin-url', {
+        method: 'POST',
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      // Handle the response
+      // ...
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
+
   };
 
   return (
@@ -30,25 +68,41 @@ const Signin = ({navigation}) => {
     }}
   />
   <Text style={styles.title}>Sign In</Text>
-  <Text style={styles.label}>Email</Text>
   <TextInput
-    style={styles.input}
+    style={[styles.input, { borderColor: emailError ?"red" : "gray" },]}
     placeholder="Enter your Email"
-    onChangeText={setEmail}
+    onChangeText={(text) => setEmail(text)}
     value={email}
     keyboardType="email-address"
     autoCapitalize="none"
   />
-  <Text style={styles.label}>Password</Text>
+  {emailError && (
+        <Text style={styles.error}>Please enter a valid email</Text>
+      )}
   <TextInput
-    style={styles.input}
+    style={[styles.input, { borderColor: passwordError ? "red" : "gray" },]}
     placeholder="Enter your Password"
-    onChangeText={setPassword}
+    onChangeText={(text) => setPassword(text)}
     value={password}
     secureTextEntry
   />
-  <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-    <Text style={styles.buttonText}>Sign In</Text>
+  {passwordError && (
+        <Text style={styles.error}>Please enter a valid password</Text>
+  )}
+
+  <TouchableOpacity 
+      style={[
+          styles.button,
+          { opacity: isLoading ? 0.5 : 1 },
+      ]}
+      onPress={handleSignIn}
+      disabled={isLoading}
+  >
+        {isLoading ? (
+          <ActivityIndicator size="small" color={COLORS.white} />
+        ) : (
+          <Text style={styles.buttonText}>Sign In</Text>
+        )}  
   </TouchableOpacity>
   <TouchableOpacity onPress={() => navigation.navigate('signup')}>
     <Text style={styles.signupText}>Don't have an account?</Text>

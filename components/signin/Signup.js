@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import {Stack, useRouter, useSearchParams} from 'expo-router';
 import {COLORS, icons, images, SIZES} from '../../constants';
 import ScreenHeaderBtn from '../common/header/ScreenHeaderBtn';
+import { ActivityIndicator } from 'react-native';
 
 
 
@@ -10,10 +11,54 @@ const Signup = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [usernameError, setUsernameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     // Handle sign up logic here
-    console.log(`Username: ${username}, Email: ${email}, Password: ${password}`);
+    if (username.trim() === '') {
+      setUsernameError(true);
+      return;
+    } else {
+      setUsernameError(false);
+    }
+    if (!email.includes('@')) {
+      setEmailError(true);
+      return;
+    } else {
+      setEmailError(false);
+    }
+
+    if (password.trim() === '') {
+      setPasswordError(true);
+      return;
+    } else {
+      setPasswordError(false);
+    }
+
+    // Call the signup API
+    setIsLoading(true);
+    try {
+      const response = await fetch('signup-url', {
+        method: 'POST',
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      // Handle the response
+      // ...
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
   }
 
   return (
@@ -40,30 +85,59 @@ const Signup = ({navigation}) => {
             headerTitle:''
         }}
         />
-      <Text style={styles.title}>Sign Up</Text>
+    <Text style={styles.title}>Sign Up</Text>
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { borderColor: usernameError ? "red" : "gray" },
+        ]}
         placeholder="Username"
         onChangeText={(text) => setUsername(text)}
         value={username}
       />
+      {usernameError && (
+        <Text style={styles.error}>Please enter a valid username</Text>
+      )}
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { borderColor: emailError ?"red" : "gray" },
+        ]}
         placeholder="Email"
         onChangeText={(text) => setEmail(text)}
         value={email}
       />
+      {emailError && (
+        <Text style={styles.error}>Please enter a valid email</Text>
+      )}
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { borderColor: passwordError ? "red" : "gray" },
+        ]}
         placeholder="Password"
         secureTextEntry={true}
         onChangeText={(text) => setPassword(text)}
         value={password}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+      {passwordError && (
+        <Text style={styles.error}>Please enter a valid password</Text>
+      )}
+      <TouchableOpacity
+        style={[
+          styles.button,
+          { opacity: isLoading ? 0.5 : 1 },
+        ]}
+        onPress={handleSignUp}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator size="small" color={COLORS.white} />
+        ) : (
+          <Text style={styles.buttonText}>Sign Up</Text>
+        )}
       </TouchableOpacity>
-    </View>
+  </View>
   )
 }
 const styles = StyleSheet.create({
@@ -71,33 +145,35 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.lightWhite,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 24,
+    marginBottom: 20,
   },
   input: {
+    height: 50,
+    borderColor: "gray",
     borderWidth: 1,
-    borderColor: '#888',
-    borderRadius: 8,
-    padding: 8,
-    margin: 8,
+    borderRadius: 10,
     width: '80%',
-    fontSize: 16,
+    paddingHorizontal: 10,
+    marginBottom: 20,
   },
   button: {
-    backgroundColor: '#007aff',
-    borderRadius: 8,
-    padding: 16,
-    margin: 16,
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    borderRadius: 10,
+    width: '80%',
   },
   buttonText: {
-    color: '#fff',
+    color: COLORS.lightWhite,
+    textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
   },
 });
+
 
 export default Signup
