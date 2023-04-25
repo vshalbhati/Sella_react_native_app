@@ -6,6 +6,7 @@ import styles from './welcome.style'
 import { icons, SIZES} from '../../../constants';
 
 const jobTypes =["Cement","Karesar","Rodi","Patthar","Concrete"];
+import {username} from "../../signin/Signup"
 
 
 const Welcome = () => {
@@ -55,7 +56,7 @@ const Welcome = () => {
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.userName}>Hey BRO!</Text>
+        <Text style={styles.userName}>Hey {username}</Text>
         <Text style={styles.welcomeMessage}>Find your seller</Text>
       </View>
 

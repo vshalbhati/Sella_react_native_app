@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'reac
 import {COLORS, icons, images, SIZES} from '../../constants';
 import ScreenHeaderBtn from '../common/header/ScreenHeaderBtn';
 import {Stack, useRouter, useSearchParams} from 'expo-router';
+import { ActivityIndicator } from 'react-native';
+
 
 const Signin = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -26,23 +28,30 @@ const Signin = ({navigation}) => {
       setPasswordError(false);
     }
 
-    // Call the signup API
     setIsLoading(true);
     try {
-      const response = await fetch('signin-url', {
+      const response = await 
+      fetch("http://localhost:3000/signin", {
         method: 'POST',
         body: JSON.stringify({
-          username: username,
           email: email,
           password: password,
         }),
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-      const data = await response.json();
-      // Handle the response
-      // ...
+      })
+      .then(res => res.json()).then(
+        data => {
+          if(data.error){
+            alert("Something went wrong!");
+          }
+          else{
+            alert("Login Successfull!");
+            navigation.navigate('home');
+          }
+        }
+      )
     } catch (error) {
       console.error(error);
     }

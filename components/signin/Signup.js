@@ -11,13 +11,14 @@ const Signup = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [cpassword, setCpassword] = useState('');
   const [usernameError, setUsernameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [cpasswordError, setCpasswordError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = async () => {
-    // Handle sign up logic here
     if (username.trim() === '') {
       setUsernameError(true);
       return;
@@ -30,31 +31,49 @@ const Signup = ({navigation}) => {
     } else {
       setEmailError(false);
     }
-
     if (password.trim() === '') {
       setPasswordError(true);
       return;
     } else {
       setPasswordError(false);
     }
+    if(password != cpassword){
+      setCpasswordError(true);
+      return;
+    } else{
+      setCpasswordError(false);
+    }
 
-    // Call the signup API
     setIsLoading(true);
     try {
-      const response = await fetch('signup-url', {
-        method: 'POST',
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          password: password,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      // Handle the response
-      // ...
+      const response = await 
+      fetch("http://localhost:3000/verify", {
+  method: 'POST',
+  body: JSON.stringify({
+    username: username,
+    email: email,
+    password: password,
+  }),
+  headers: {'Content-Type': 'application/json'}
+})
+.then(res => res.json()).then(
+  data =>{
+    if(data.error){
+      alert("something went wrong!");
+    }
+    else if(data.message === "Verification code has been sent to your email!"){
+      console.log(data.udata);
+      alert(data.message);
+      navigation.navigate('verification', { userdata: data.udata})
+    }
+    // else{
+    //   alert('Account created succesfully!');
+    //   navigation.navigate('signin');
+    // }
+    // console.log(data);
+  }
+
+)
     } catch (error) {
       console.error(error);
     }
@@ -123,6 +142,20 @@ const Signup = ({navigation}) => {
       {passwordError && (
         <Text style={styles.error}>Please enter a valid password</Text>
       )}
+      <TextInput
+        style={[
+          styles.input,
+          { borderColor: cpasswordError ? "red" : "green" },
+
+        ]}
+        placeholder="Confirm Password"
+        secureTextEntry={true}
+        onChangeText={(text) => setCpassword(text)}
+        value={cpassword}
+      />
+      {cpasswordError && (
+        <Text style={styles.error}>Password and Confirm Password should be same</Text>
+      )}
       <TouchableOpacity
         style={[
           styles.button,
@@ -155,7 +188,7 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     borderColor: "gray",
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 10,
     width: '80%',
     paddingHorizontal: 10,

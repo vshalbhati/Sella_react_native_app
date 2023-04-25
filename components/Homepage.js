@@ -70,7 +70,7 @@ const Home = ({navigation}) =>{
           headerStyle: { backgroundColor: COLORS.lightWhite },
           headerShadowVisible: false,
           headerLeft: () => (
-            <TouchableOpacity>
+            <View>
               <ScreenHeaderBtn
               iconUrl={icons.menu} 
               dimension='60%'
@@ -95,7 +95,7 @@ const Home = ({navigation}) =>{
                   </View>
                   </Animated.View>
                 )}
-            </TouchableOpacity>
+            </View>
           ),
           headerRight: () => (
             <TouchableOpacity>
@@ -110,7 +110,7 @@ const Home = ({navigation}) =>{
               </TouchableOpacity>
             </TouchableOpacity>
           ),
-          headerTitle:"",
+          headerTitle:"CONSTRO",
         }}
       />
       <ScrollView showsHorizontalScrollIndicator={false}>
