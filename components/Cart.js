@@ -36,7 +36,7 @@ const Cart = ({navigation}) => {
         <Text style={styles.headerText}>Shopping Cart</Text>
       </View>
       <View style={styles.cartItem}>
-        <Image source={require('../assets/images/kemal.jpg')} style={styles.cartItemImage} />
+        <Image source={require('../assets/images/kemal.jpeg')} style={styles.cartItemImage} />
         <View style={styles.cartItemDetails}>
           <Text style={styles.cartItemName}>Product 1</Text>
           <Text style={styles.cartItemPrice}>$20</Text>
