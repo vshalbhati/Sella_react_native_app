@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { View, ScrollView, SafeAreaView, Animated, Text, TouchableOpacity, FlatList, ActivityIndicator, ActivityIndicatorBase, TextInput, Button, Image, StyleSheet } from 'react-native'
+import { View, ScrollView, SafeAreaView, Animated, Text, TouchableOpacity, FlatList, ActivityIndicator, ActivityIndicatorBase, TextInput, Button, Image, StyleSheet, Easing } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import {COLORS, icons, images, SIZES} from '../constants';
 import { Nearbyjobs, ScreenHeaderBtn, Welcome} from '../components';
 import account from "./account/Account";
 import { Stack, useRouter } from "expo-router";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: -1,
   },
   absoluteBox: {
     position: 'absolute',
@@ -29,37 +29,75 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  navla: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 60,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderColor: '#ddd',
+    elevation: 5,
+  },
+  icon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    height: '100%',
+    width: "33%",
+  },
+  selectedIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2b2b2b',
+    height: '120%',
+    width: "33%",
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,      shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  iconButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
 });
 
 const Home = ({navigation}) =>{
   const router = useRouter();
 
-  const [open, setOpen] = useState(false);
-  const animation = new Animated.Value(0);
+  const [selected, setSelected] = useState(0);
+  const animationValues = [1, 1, 1, 1].map(() => new Animated.Value(1));
 
-  const toggleMenu = () => {
-    if (open) {
-      Animated.timing(animation, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start(() => setOpen(false));
-    } else {
-      setOpen(true);
-      Animated.timing(animation, {
+  const onPress = (index) => {
+    setSelected(index);
+    Animated.sequence([
+      Animated.timing(animationValues[index], {
+        toValue: 1.5,
+        duration: 100,
+        useNativeDriver: true,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      Animated.timing(animationValues[index], {
         toValue: 1,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    }
+        duration: 100,
+        useNativeDriver: true,
+        easing: Easing.inOut(Easing.ease),
+      }),
+    ]).start();
   };
-
-  const animatedStyles = {
-    left: animation.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 200],
-    }),
-  };
+  const iconStyles = (index) => [
+    styles.icon,
+    selected === index && styles.selectedIcon,
+    {
+      transform: [{ scale: animationValues[index] }],
+    },
+  ];
 
 
   return (
@@ -69,45 +107,23 @@ const Home = ({navigation}) =>{
         options={{
           headerStyle: { backgroundColor: COLORS.lightWhite },
           headerShadowVisible: false,
-          headerLeft: () => (
-            <View>
-              <ScreenHeaderBtn
-              iconUrl={icons.menu} 
-              dimension='60%'
-              ></ScreenHeaderBtn>
-              <TouchableOpacity
-               style={{flex:1, backgroundColor:'transparent',height:40, width:40,position:'absolute'}}
-              onPress={toggleMenu}
-              />
-              {open && (
-                  <Animated.View style={[styles.container, animatedStyles]}>
-                  <View style={styles.absoluteBox}>
-                    <Text style={{ color: "white", fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Menu</Text>
-                    <TouchableOpacity style={{ marginBottom: 10 }}>
-                      <Text style={{ color: "white", fontSize: 16 }}>Menu Item 1</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ marginBottom: 10 }}>
-                      <Text style={{ color: "white", fontSize: 16 }}>Menu Item 2</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <Text style={{ color: "white", fontSize: 16 }}>Menu Item 3</Text>
-                    </TouchableOpacity>
-                  </View>
-                  </Animated.View>
-                )}
-            </View>
-          ),
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 24,
+            color: COLORS.darkGray,
+            paddingHorizontal: 16,
+          },
           headerRight: () => (
-            <TouchableOpacity>
-              <ScreenHeaderBtn
-                iconUrl={images.profile}
-                dimension='100%' 
-              />
-              <TouchableOpacity
-               style={{flex:1, backgroundColor:'transparent',height:40, width:40,position:'absolute', right:0}}
-               onPress={()=> navigation.navigate('account')}
-               >
-              </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={()=>navigation.navigate('cart')}>
+              <Icon name="shopping-cart" size={32} color={COLORS.gray} />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={()=> navigation.navigate('account')}
+            >
+              <Icon name="person" size={36} color={COLORS.gray} />
             </TouchableOpacity>
           ),
           headerTitle:"CONSTRO",
@@ -115,12 +131,21 @@ const Home = ({navigation}) =>{
       />
       <ScrollView showsHorizontalScrollIndicator={false}>
         <View style={{flex:1,padding: SIZES.medium}}>
-          <TouchableOpacity onPress={toggleMenu}>
-          </TouchableOpacity>
            <Welcome />
           <Nearbyjobs />
         </View>
       </ScrollView>
+      <SafeAreaView style={styles.navla}>
+      <TouchableOpacity onPress={() => {setSelected(0), navigation.navigate('home')}} style={iconStyles(0)}>
+        <Icon name="build" size={28} color={selected === 0 ? "#fff" : "#444"} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {setSelected(1), navigation.navigate('thekedar'), setSelected(0)}} style={iconStyles(1)}>
+        <Icon name="people" size={28} color={selected === 1 ? "#fff" : "#444"} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {setSelected(2), navigation.navigate('movers'), setSelected(0)}} style={iconStyles(2)}>
+        <Icon name="local-shipping" size={28} color={selected === 2 ? "#fff" : "#444"} />
+      </TouchableOpacity>
+    </SafeAreaView>
     </SafeAreaView>
 
   )
